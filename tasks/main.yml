@@ -1,2 +1,33 @@
 ---
-# tasks file for ssl
+- name: ssl dependencies
+  yum: name=openssl-libs state=present
+  tags:
+    - ssl
+    - packages
+
+- name: install private keys
+  copy: content="{{ item.value.private_key }}" dest="/etc/pki/tls/private/{{ item.key }}.key" owner=root group=root mode=0600
+  with_dict: ssl_certificates
+  when: ssl_certificates|length > 0
+  no_log: true
+  tags:
+    - ssl
+    - configuration
+
+- name: install certificates
+  copy: content="{{ item.value.certificate }}" dest="/etc/pki/tls/certs/{{ item.key }}.crt" owner=root group=root mode=0644
+  with_dict: ssl_certificates
+  when: ssl_certificates|length > 0
+  no_log: true
+  tags:
+    - ssl
+    - configuration
+
+- name: install certificate chains
+  template: src=chain.pem.j2 dest="/etc/pki/tls/certs/{{ item.key }}.chain.crt" owner=root group=root mode=0644
+  with_dict: ssl_certificates
+  when: ssl_certificates|length > 0
+  no_log: true
+  tags:
+    - ssl
+    - configuration

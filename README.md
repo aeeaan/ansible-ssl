@@ -6,7 +6,11 @@ An ansible role for installing SSL certificates. Make sure you use ansible-vault
 Role Variables
 --------------
 
-TODO
+    ssl_certificates:
+      localhost.localdomain
+        private_key:
+        certificate:
+        chain:
 
 Example Playbook
 ----------------
