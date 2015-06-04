@@ -31,3 +31,12 @@
   tags:
     - ssl
     - configuration
+
+- name: install certificate bundle
+  template: src=bundle.pem.j2 dest="/etc/pki/tls/certs/{{ item.key }}.bundle.crt" owner=root group=root mode=0644
+  with_dict: ssl_certificates
+  when: ssl_certificates|length > 0 and item.value.certificate is defined
+  no_log: true
+  tags:
+    - ssl
+    - configuration
