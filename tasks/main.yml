@@ -1,6 +1,14 @@
 ---
 - name: ssl dependencies
   yum: name=openssl-libs state=present
+  when: ansible_distribution_major_version|int > 6
+  tags:
+    - ssl
+    - packages
+
+- name: ssl dependencies for centos 6
+  yum: name=openssl state=present
+  when: ansible_distribution_major_version|int < 7
   tags:
     - ssl
     - packages
