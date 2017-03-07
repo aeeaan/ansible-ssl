@@ -15,7 +15,7 @@
 
 - name: install private keys
   copy: content="{{ item.value.private_key }}" dest="/etc/pki/tls/private/{{ item.key }}.key" owner=root group=root mode=0600
-  with_dict: ssl_certificates
+  with_dict: "{{ ssl_certificates }}"
   when: ssl_certificates|length > 0 and item.value.private_key is defined
   no_log: true
   tags:
@@ -24,7 +24,7 @@
 
 - name: install certificates
   copy: content="{{ item.value.certificate }}" dest="/etc/pki/tls/certs/{{ item.key }}.crt" owner=root group=root mode=0644
-  with_dict: ssl_certificates
+  with_dict: "{{ ssl_certificates }}"
   when: ssl_certificates|length > 0 and item.value.certificate is defined
   no_log: true
   tags:
@@ -33,7 +33,7 @@
 
 - name: install certificate chains
   template: src=chain.pem.j2 dest="/etc/pki/tls/certs/{{ item.key }}.chain.crt" owner=root group=root mode=0644
-  with_dict: ssl_certificates
+  with_dict: "{{ ssl_certificates }}"
   when: ssl_certificates|length > 0 and item.value.chain is defined
   no_log: true
   tags:
@@ -42,7 +42,7 @@
 
 - name: install certificate bundle
   template: src=bundle.pem.j2 dest="/etc/pki/tls/certs/{{ item.key }}.bundle.crt" owner=root group=root mode=0644
-  with_dict: ssl_certificates
+  with_dict: "{{ ssl_certificates }}"
   when: ssl_certificates|length > 0 and item.value.certificate is defined
   no_log: true
   tags:
@@ -51,7 +51,7 @@
 
 - name: install complete bundle
   template: src=complete.pem.j2 dest="/etc/pki/tls/certs/{{ item.key }}.pem" owner=root group=root mode=0600
-  with_dict: ssl_certificates
+  with_dict: "{{ ssl_certificates }}"
   when: ssl_certificates|length > 0 and item.value.certificate is defined
   no_log: true
   tags:
